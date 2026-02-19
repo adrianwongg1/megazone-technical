@@ -19,4 +19,13 @@ merged = paid.merge(
 
 merged = merged[merged["full_name"].str.len() > 0].copy()
 
-print(merged.head(10))
+paid_names = merged["fullName"].fillna("").str.strip()
+info_names = merged["full_name"].fillna("").str.strip()
+no_paid_name = paid_names == ""
+names_agree = paid_names == info_names
+
+merged = merged[no_paid_name | names_agree].drop(columns=["fullName"])
+
+cleaned = merged[["memberId", "full_name", "paidAmount"]].copy()
+cleaned = cleaned.sort_values("memberId").reset_index(drop=True)
+
