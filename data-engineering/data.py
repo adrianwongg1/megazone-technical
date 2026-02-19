@@ -11,4 +11,12 @@ members["full_name"] = (
     members["firstName"].fillna("").str.strip() + " " + members["lastName"].fillna("").str.strip()
 ).str.strip()
 
-print(members["full_name"].head(10))
+merged = paid.merge(
+    members[["memberId", "full_name"]],
+    on="memberId",
+    how="inner",
+)
+
+merged = merged[merged["full_name"].str.len() > 0].copy()
+
+print(merged.head(10))
