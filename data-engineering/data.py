@@ -29,3 +29,15 @@ merged = merged[no_paid_name | names_agree].drop(columns=["fullName"])
 cleaned = merged[["memberId", "full_name", "paidAmount"]].copy()
 cleaned = cleaned.sort_values("memberId").reset_index(drop=True)
 
+cleaned.to_csv(OUTPUT_PATH, index=False)
+
+if cleaned.empty:
+    print("No valid member data to report.")
+else:
+    total_paid = cleaned["paidAmount"].sum()
+    row_max = cleaned.loc[cleaned["paidAmount"].idxmax()]
+
+    print(f"Sum of paid amount on valid data: {total_paid}")
+    print(f"Highest paid amount: {row_max["paidAmount"]}")
+    print(f"Member ID: {row_max["memberId"]}")
+    print(f"Full name: {row_max["full_name"]}")
